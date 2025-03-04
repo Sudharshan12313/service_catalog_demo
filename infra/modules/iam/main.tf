@@ -83,15 +83,15 @@ resource "aws_iam_role" "servicecatalog_launch_role" {
         {
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::686255946921:root"
+                "AWS": "arn:aws:iam::183114607892:root"
             },
             "Action": "sts:AssumeRole",
             "Condition": {
                 "StringLike": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::686255946921:role/TerraformEngine/TerraformExecutionRole*",
-                        "arn:aws:iam::686255946921:role/TerraformEngine/ServiceCatalogExternalParameterParserRole*",
-                        "arn:aws:iam::686255946921:role/TerraformEngine/ServiceCatalogTerraformOSParameterParserRole*"
+                        "arn:aws:iam::183114607892:role/TerraformEngine/TerraformExecutionRole*",
+                        "arn:aws:iam::183114607892:role/TerraformEngine/ServiceCatalogExternalParameterParserRole*",
+                        "arn:aws:iam::183114607892:role/TerraformEngine/ServiceCatalogTerraformOSParameterParserRole*"
                     ]
                 }
             }
