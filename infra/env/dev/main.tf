@@ -24,7 +24,7 @@ module "service_catalog" {
   support_url           = "https://wiki.example.com/IT/support"
   support_email         = "ITSupport@example.com" 
   artifact_version      = "v1.0"
-  template_url          = "https://terraform-backend-statefi.s3.us-west-1.amazonaws.com/service-catalog_ec2.tar.gz"
+  template_url          = "https://nsh-state-new.s3.us-west-2.amazonaws.com/service-catalog_ec2.tar.gz"
   launch_role_arn       = module.iam.iam_role_arn
   iam_group_arn         = module.iam_group.iam_group_arn
 }
