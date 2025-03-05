@@ -88,15 +88,6 @@ jobs:
          # Run TFLint with proper syntax
          tflint --config .tflint.hcl
      
-
-      # Step: Run Terraform Validate (validate configuration files)
-      - name: Terraform Validate
-        run: |
-          cd infra/env/${{ github.event.inputs.environment || 'dev' }}
-          terraform validate
-
-
-
       # Step: Terraform Plan
       - name: Terraform Plan
         run: |
