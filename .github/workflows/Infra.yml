@@ -1,0 +1,114 @@
+name: Infra Provisioning through Terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy (eg..., dev, staging, prod)"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+        - dev
+        - staging
+        - prod
+
+  push:
+     branches:
+       - main
+
+      
+permissions:
+  contents: read
+  id-token: write  
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step: Set up Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.5
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::183114607892:role/github_actions_oidc
+          role-session-name: githubactions
+          aws-region: "us-west-2"     
+
+      # Step: Terraform Init
+      - name: Terraform Init
+        run: | 
+          cd infra/env/${{ github.event.inputs.environment || 'dev' }}
+          terraform init
+      
+      - name: Install TFLint
+        run: |
+          TFLINT_VERSION="v0.55.0"
+          curl -sL "https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip" -o tflint.zip
+          
+          if [ ! -s "tflint.zip" ]; then
+            echo "Error: Downloaded TFLint archive is empty or invalid."
+            exit 1
+          fi
+
+          unzip tflint.zip
+          chmod +x tflint
+          sudo mv tflint /usr/local/bin/
+          rm tflint.zip
+          
+          echo "TFLint installed successfully:"
+          tflint --version
+
+
+      #Step: Run TFLint
+      - name: Run TFLint
+        run: |
+         cd Infra/Environments/${{ github.event.inputs.environment || 'dev' }}
+
+         # Ensure .tflint.hcl exists
+         if [ ! -f ".tflint.hcl" ]; then
+            cat <<EOF > .tflint.hcl
+            plugin "terraform" {
+            enabled = true
+           }
+         EOF
+         fi
+
+         # Install TFLint plugin (Terraform)
+         tflint --init
+
+         # Run TFLint with proper syntax
+         tflint --config .tflint.hcl
+     
+
+      # Step: Run Terraform Validate (validate configuration files)
+      - name: Terraform Validate
+        run: |
+          cd infra/env/${{ github.event.inputs.environment || 'dev' }}
+          terraform validate
+
+
+
+      # Step: Terraform Plan
+      - name: Terraform Plan
+        run: |
+          cd infra/env/${{ github.event.inputs.environment || 'dev' }} 
+          terraform plan  -out=tfplan
+        
+    
+
+      # Step: Apply Terraform
+      - name: Apply Terraform
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          cd infra/env/${{ github.event.inputs.environment || 'dev' }}
+          terraform init
+          terraform apply -auto-approve
