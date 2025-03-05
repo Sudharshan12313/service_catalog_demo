@@ -93,8 +93,13 @@ jobs:
         run: |
           cd infra/env/${{ github.event.inputs.environment || 'dev' }} 
           terraform plan  -out=tfplan
+
+      # Step: Run Terraform Validate (validate configuration files)
+      - name: Terraform Validate
+        run: |
+          cd infra/env/${{ github.event.inputs.environment || 'dev' }}
+          terraform validate    
         
-    
 
       # Step: Apply Terraform
       - name: Apply Terraform
