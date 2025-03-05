@@ -1,4 +1,4 @@
-name: Infra Provisioning through Terraform
+name: Destroy the Provisioned Infra
 
 on:
   workflow_dispatch:
