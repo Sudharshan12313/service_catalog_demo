@@ -1,0 +1,1 @@
+# Empty variables.tf file for module structure
