@@ -71,7 +71,7 @@ jobs:
       #Step: Run TFLint
       - name: Run TFLint
         run: |
-         cd Infra/Environments/${{ github.event.inputs.environment || 'dev' }}
+         cd infra/env/${{ github.event.inputs.environment || 'dev' }}
 
          # Ensure .tflint.hcl exists
          if [ ! -f ".tflint.hcl" ]; then
