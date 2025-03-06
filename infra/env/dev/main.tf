@@ -85,7 +85,7 @@ module "service_catalog" {
       product_owner       = "Devops"
       product_description = "Terraform product containing an Amazon VPC."
       artifact_version    = "v1.0"
-      template_url        = "https://nsh-state-new.s3.us-west-2.amazonaws.com/vpc_module.tar.gz"
+      template_url        = "https://nsh-state-new.s3.us-west-2.amazonaws.com/VPC.tar.gz"
     }
   ]
 }
