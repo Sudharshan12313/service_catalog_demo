@@ -1,4 +1,4 @@
-variable "portfolio_name" {
+/*variable "portfolio_name" {
   description = "Name of the Service Catalog portfolio"
   type        = string
 }
@@ -50,4 +50,22 @@ variable "launch_role_arn" {
 
 variable "iam_group_arn" {
   type = string
+}*/
+
+variable "portfolio_name" { type = string }
+variable "portfolio_description" { type = string }
+variable "provider_name" { type = string }
+variable "support_url" { type = string }
+variable "support_email" { type = string }
+variable "iam_group_arn" { type = string }
+variable "launch_role_arn" { type = string }
+
+variable "products" {
+  type = list(object({
+    product_name        = string
+    product_owner       = string
+    product_description = string
+    artifact_version    = string
+    template_url        = string
+  }))
 }
