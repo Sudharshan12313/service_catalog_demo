@@ -50,3 +50,52 @@ resource "aws_servicecatalog_constraint" "launch_constraint" {
 
   depends_on = [var.launch_role_arn]
 }
+
+# Create Tag Options
+resource "aws_servicecatalog_tag_option" "tag_option_ec2" {
+  key    = "ResourceType"
+  value  = "EC2"
+  active = true
+}
+
+resource "aws_servicecatalog_tag_option" "tag_option_vpc" {
+  key    = "ResourceType"
+  value  = "VPC"
+  active = true
+}
+
+# Associate Tag Options with Portfolio
+resource "aws_servicecatalog_tag_option_resource_association" "portfolio_tag_option_ec2" {
+  resource_id   = aws_servicecatalog_portfolio.portfolio.id
+  tag_option_id = aws_servicecatalog_tag_option.tag_option_ec2.id
+}
+
+resource "aws_servicecatalog_tag_option_resource_association" "portfolio_tag_option_vpc" {
+  resource_id   = aws_servicecatalog_portfolio.portfolio.id
+  tag_option_id = aws_servicecatalog_tag_option.tag_option_vpc.id
+}
+
+# Associate Tag Options with Products
+resource "aws_servicecatalog_tag_option_resource_association" "product_tag_option_ec2" {
+  count         = length(var.products)
+  resource_id   = aws_servicecatalog_product.products[count.index].id
+  tag_option_id = aws_servicecatalog_tag_option.tag_option_ec2.id
+}
+
+resource "aws_servicecatalog_tag_option_resource_association" "product_tag_option_vpc" {
+  count         = length(var.products)
+  resource_id   = aws_servicecatalog_product.products[count.index].id
+  tag_option_id = aws_servicecatalog_tag_option.tag_option_vpc.id
+}
+
+# Define a Service Action
+/*resource "aws_servicecatalog_service_action" "reboot_action" {
+  name            = "RebootEC2"
+  description     = "Reboot the EC2 instance"
+  accept_language = "en"
+
+  definition {
+    name    = "AWS-RestartEC2Instance"
+    version = "1"  # Required argument
+  }
+}*/
