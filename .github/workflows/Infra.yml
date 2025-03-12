@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to deploy (eg.., dev, staging, prod)"
+        description: "Environment to deploy (eg..., dev, staging, prod)"
         required: true
         default: "dev"
         type: choice
